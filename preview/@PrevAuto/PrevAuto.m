@@ -13,13 +13,13 @@ classdef PrevAuto
         function pa = PrevAuto(num_s,ts_array,dyn,t_prev,t_hold)
             if nargin == 0 || num_s == 0
                 pa.num_s = 0;
-                pa.ts_array = [];
+                pa.ts_array = logical([]);
                 pa.dyn = {};
                 pa.t_prev = [];
                 pa.t_hold = [];
             else
                 pa.num_s = num_s;
-                pa.ts_array = ts_array;
+                pa.ts_array = logical(ts_array);
                 pa.dyn = dyn;
                 pa.t_prev = t_prev;
                 pa.t_hold = t_hold;
@@ -38,13 +38,19 @@ classdef PrevAuto
                 assert(size(pa.t_hold,1)==2);
                 array_and_prev = ~pa.ts_array&pa.t_prev;
                 assert(~any(array_and_prev(:)));
+                assert(all(pa.t_hold(1,:) <= pa.t_hold(2,:)));
+                
+                for i = 1:pa.num_s
+                    idx = pa.t_prev(i,:)~=0;
+                    assert(all(pa.t_prev(i,idx)<=pa.t_hold(1,i)));
+                end
             end
         end
         
-        function add_transitions(pa,state1,state2,t_prev)
-            for i = 1:length(state1)
-                pa.ts_array(state1(i),state2(i)) = 1;
-                pa.t_prev(state1(i),state2(i)) = t_prev(i);
+        function add_transitions(pa,s1,s2,t_prev)
+            for i = 1:length(s1)
+                pa.ts_array(s1(i),s2(i)) = 1;
+                pa.t_prev(s1(i),s2(i)) = t_prev(i);
             end
         end
         
@@ -60,7 +66,38 @@ classdef PrevAuto
             pa.dyn(end+1:end+num_new) = dyn;
             pa.t_hold(:,end+1:end+num_new) = t_hold;
         end
+        
+        function remove_states(pa, idx_s)
+            if(max(idx_s) > pa.num_s || min(idx_s) < 1)
+                return;
+            end
+            states = 1:pa.num_s;
+            states(idx_s) = [];
+            pa.num_s = pa.num_s - length(idx_s);
+            pa.ts_array(idx_s,:) = [];
+            pa.ts_array(:,idx_s) = [];
+            pa.dyn(idx_s) = [];
+            pa.t_prev(idx_s,:) = [];
+            pa.t_prev(:,idx_s) = [];
+            pa.t_hold(:,idx_s) = [];
+            
+            disp(["Remove states "+num2str(idx_s)+"."]);
+            disp(["Indices of states: "+num2str(states)+" ---> "+...
+                num2str(1:pa.num_s)+"."]);
+        end
+        
+        function remove_transitions(pa, s1, s2)
+            for i = 1:length(s1)
+                pa.ts_array(s1(i),s2(i)) = 0;
+                pa.t_prev(s1(i),s2(i)) = 0;
+            end
+        end
+            
+        [C_inv,volume] = win_always(pa,X,pre,vol,inter,W,verbose)
+            
     end
+    
+    
     
 end
     

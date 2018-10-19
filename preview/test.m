@@ -32,17 +32,31 @@ dyn_list = get_acc_dyn(param);
 
 dyn_all = get_acc_dyn(param2);
 dyn_all = dyn_all{1};
+
+ts = [0 1 0 0 0; 
+      0 0 1 0 0;
+      0 0 0 1 0;
+      0 0 0 0 1;
+      1 0 0 0 0];
+
+t_prev = [0 2 0 0 0; 
+      0 0 2 0 0;
+      0 0 0 2 0;
+      0 0 0 0 2;
+      2 0 0 0 0];
+t_hold = [3 3 3 3 30;
+          inf inf inf inf 100];
+  
+pa = PrevAuto(num_seg,ts,dyn_list,t_prev,t_hold);
+
+X = Polyhedron('A', [1; -1], 'b', [32;-16]);
+
+X_list = {X,X,X,X,X};
+
+pre = @(dyn,X) dyn.pre(X,0);
+vol = @(X) X.volume;
+inter = @(X1,X2) minHRep(X1.intersect(X2));
 %%
-% X = Polyhedron('A', [1; -1], 'b', [32;-16]);
+[W,volume] = pa.win_always(X_list,pre,vol,inter,[],1);
 
-% Xinv1 = win_always(dyn{1}, X, 0.00, false, 1);
-
-% Pre1 = d1.pre(X,0);
-
-% Pre2 = d2.pre(X,0);
-
-%%
-% plot(Xinv, 'alpha', 0.75)
-% xlabel('$x$', 'interpreter', 'latex')
-% ylabel('$\dot x$', 'interpreter', 'latex')
-% zlabel('$\ddot x$', 'interpreter', 'latex')
+% W2 = dyn_all.win_always(X,0,0,1);

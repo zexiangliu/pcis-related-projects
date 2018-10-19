@@ -10,5 +10,8 @@ clc;
 cd ..
 
 addpath(genpath('preview'))
+cd preview
 % addpath(genpath('int_estim'))
+% cd int_estim
 % addpath(genpath('acc_disturb'))
+% cd acc_disturb
