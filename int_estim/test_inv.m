@@ -28,22 +28,22 @@ H_S = [eye(4);-eye(4)];
 h_S1 = [30;2.5;300;25;-16;0.9;-10;0];
 h_S2 = [30;2.5;-10;25;-16;0.9;300;0];
 
-S1 = Polyhedron('A',H_S,'b',h_S1);
-S2 = Polyhedron('A',H_S,'b',h_S2);
-
-% S is the safe set that consists of two polytopes
-S = PolyUnion([S1,S2]);
-
 % target set V
 H_V = [eye(4);-eye(4)];
 h_V1 = [25;1.5;20;25;-20;0.9;-10;0];
 h_V2 = [25;1.5;-10;25;-20;0.9;20;0];
 
-V1 = Polyhedron('A',H_S,'b',h_S1);
-V2 = Polyhedron('A',H_S,'b',h_S2);
+load inv_caut.mat
+V1 = PolyUnion([P{1},P{2}]);
+V1.reduce;
 
+S = S.Set(1);
+load inv_ann.mat
+V2 = PolyUnion([Xr{1},Xr{2}]);
+V2.reduce;
+% 
 % V is the intersection of two invariant sets
-V = PolyUnion([V1,V2]);
+V = IntersectPolyUnion(V1,V2);
 Va_fix = V;
 Va_bnd = V;
 Vc_fix = V;
@@ -51,19 +51,24 @@ Vc_bnd = V;
 
 for i = 1:size(u,2)
     tmpVa = list_d1{i}.pre(Va_fix,0);
+    tmpVa.reduce;
     Va_fix = IntersectPolyUnion(tmpVa,S);
     tmpVa_bnd = d1.pre(Va_bnd,0);
+	tmpVa_bnd.reduce;
     Va_bnd = IntersectPolyUnion(tmpVa_bnd,S);
     
     tmpVc = list_d2{i}.pre(Vc_fix,0);
+    tmpVc.reduce;
     Vc_fix = IntersectPolyUnion(tmpVc,S);
     tmpVc_bnd = d2.pre(Vc_bnd,0);
+    tmpVc_bnd.reduce;
     Vc_bnd = IntersectPolyUnion(tmpVc_bnd,S);
 end
 %% computing winning sets
 
 % Winning set with fixed input sequences
-Win = IntersectPolyUnion(Va_fix,Vc_fix,1000);
+
+Win = IntersectPolyUnion(Va_fix,Vc_fix,50);
 
 % Winning set with bounded inputs
 Win_cnv = IntersectPolyUnion(Va_bnd,Vc_bnd);

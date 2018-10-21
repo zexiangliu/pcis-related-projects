@@ -130,5 +130,5 @@ rhoPre = 1e-6;
 Xr = expand(dyn, S, C, rhoPre);
 
 hold on;
-plot(G, 'color', 'g')
+% plot(G, 'color', 'g')
 1;

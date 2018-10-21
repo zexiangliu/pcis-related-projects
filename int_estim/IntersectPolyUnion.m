@@ -20,15 +20,18 @@ function [P12] = IntersectPolyUnion(P1,P2, MaxNum)
             if ~int_ji.isEmptySet
                 P12.add(int_ji);
             end
+            
+            if(P12.Num >= MaxNum)
+                P12.reduce; % or P12.merge
+                MaxNum = max(MaxNum,P12.Num*2);
+            end
         end
     end
     
-    % reduce the number of the Polytopes
-    if(P12.Num >= MaxNum)
-        P12.reduce; % or P12.merge
-        if(P12.Num >= MaxNum)
-            P12.merge;
-        end
-    end
+    P12.reduce;
+%     % reduce the number of the Polytopes
+%     if(P12.Num >= MaxNum)
+%         P12.reduce; % or P12.merge
+%     end
 end
 
