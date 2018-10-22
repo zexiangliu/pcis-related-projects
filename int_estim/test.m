@@ -13,6 +13,13 @@ param.KA = 0.05;
 param.dA = [-0.3, 0.3];
 param.a_ex = [-3, 3];
 param.v_ey = [-0.9, 0.9];
+param.v_ex = [16,30];
+param.y_e = [-0.9,4.5];
+param.h = [-300,300];
+param.v_lx = [0,25];
+param.w_ex = [0,0];
+param.w_ey = [0,0];
+param.w_Lx = [0,0];
 
 % input sequence
 u = [0 0 0 0;

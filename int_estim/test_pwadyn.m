@@ -1,4 +1,5 @@
 clc;clear all;close all;
+% add piecewise behavior of the v_ey
 
 % Parameters used in the intention estimation model (see the doc related
 % to the model used in the intention estimation
@@ -20,7 +21,8 @@ param.v_lx = [0,25];
 param.w_ex = [0,0];
 param.w_ey = [0,0];
 param.w_Lx = [0,0];
-
+param.beta = 0.135;
+param.v_ex_db = 20;
 
 % input sequence
 u = [0 0 0 0;
@@ -29,7 +31,7 @@ u = [0 0 0 0;
 % sampling time
 dt = 0.25;
 
-[list_d1, list_d2, d1, d2] = get_dyn(u, dt, param);
+[list_d1, list_d2, d1, d2] = get_pwadyn(u, dt, param);
 
 % safe set: h in [-300, -10]U[10, 300]
 H_S = [eye(4);-eye(4)];
@@ -57,18 +59,23 @@ Va_bnd = V;
 Vc_fix = V;
 Vc_bnd = V;
 
+%% T step backward reachability computation
+
 for i = 1:size(u,2)
-    tmpVa = list_d1{i}.pre(Va_fix,0);
+    
+    disp("The iteration with "+num2str(i)+"th input.");
+    
+    tmpVa = list_d1{i}.pre(Va_fix,1e-6);
     tmpVa.reduce;
     Va_fix = IntersectPolyUnion(tmpVa,S);
-    tmpVa_bnd = d1.pre(Va_bnd,0);
+    tmpVa_bnd = d1.preUnion(Va_bnd,1e-6);
 	tmpVa_bnd.reduce;
     Va_bnd = IntersectPolyUnion(tmpVa_bnd,S);
     
-    tmpVc = list_d2{i}.pre(Vc_fix,0);
+    tmpVc = list_d2{i}.pre(Vc_fix,1e-6);
     tmpVc.reduce;
     Vc_fix = IntersectPolyUnion(tmpVc,S);
-    tmpVc_bnd = d2.pre(Vc_bnd,0);
+    tmpVc_bnd = d2.preUnion(Vc_bnd,1e-6);
     tmpVc_bnd.reduce;
     Vc_bnd = IntersectPolyUnion(tmpVc_bnd,S);
 end
