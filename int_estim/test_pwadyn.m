@@ -43,13 +43,13 @@ H_V = [eye(4);-eye(4)];
 h_V1 = [25;1.5;20;25;-20;0.9;-10;0];
 h_V2 = [25;1.5;-10;25;-20;0.9;20;0];
 
-load inv_caut.mat
-V1 = PolyUnion([P{1},P{2}]);
+inv_caut = load("inv_caut.mat");
+V1 = PolyUnion([inv_caut.Xr{1},inv_caut.Xr{2}]);
 V1.reduce;
 
-S = S.Set(1);
-load inv_ann.mat
-V2 = PolyUnion([Xr{1},Xr{2}]);
+S = inv_caut.S.Set(1);
+inv_ann = load("inv_ann.mat");
+V2 = PolyUnion([inv_ann.Xr{1},inv_ann.Xr{2}]);
 V2.reduce;
 % 
 % V is the intersection of two invariant sets

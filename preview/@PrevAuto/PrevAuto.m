@@ -93,7 +93,7 @@ classdef PrevAuto
             end
         end
             
-        [C_inv,volume] = win_always(pa,X,pre,vol,inter,W,verbose)
+        [C_inv,volume] = win_always(pa,X,pre,vol,inter,isEmpty,W,verbose)
             
     end
     

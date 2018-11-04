@@ -96,8 +96,8 @@ domain = Polyhedron('A',H_x,'b',h_x);
 
 H_reg1 = [1 0 0 0;-1 0 0 0];
 h_reg1 = [v_ex_db;-v_ex(1)];
-h_reg2 = [v_ex_db,v_ex_db+v_ey(2)/beta];
-h_reg3 = [v_ex_db+v_ey(2)/beta,v_ex(2)];
+h_reg2 = [v_ex_db+v_ey(2)/beta,-v_ex_db];
+h_reg3 = [v_ex(2),-(v_ex_db+v_ey(2)/beta)];
 reg_list{1} = Polyhedron('A',H_reg1,'b',h_reg1);
 reg_list{2} = Polyhedron('A',H_reg1,'b',h_reg2);
 reg_list{3} = Polyhedron('A',H_reg1,'b',h_reg3);
@@ -114,7 +114,7 @@ hd_ann = [w_ex(2) w_ey(2) w_Lx(2) a_ex(2) dA(2)...
 D_ann = Polyhedron('A', Hd_ann, 'b', hd_ann);
 Ad = {zeros(4),zeros(4),zeros(4),zeros(4),zeros(4)};
 Ew = [0 dt 0 0]';
-XW_v = {[0 0 0 0 0],[0 0 0 0 0]}; % not sure about this part
+XW_v = {[0 0 0 0 0]}; % not sure about this part
 dyn_ann_list{1} = Dyn(A1, F_ann, B1, XU, [], [],[], Ad, Fd_ann, D_ann,...
                     [],[],Ew,XW_v);
 %==============================
@@ -123,7 +123,7 @@ dyn_ann_list{1} = Dyn(A1, F_ann, B1, XU, [], [],[], Ad, Fd_ann, D_ann,...
 
 % % the coefficient matrix of v_ey
 Ew = [0 dt 0 0]';
-XW_v = {[beta 0 0 0 0],[beta 0 0 0 0]}; % not sure about this part
+XW_v = {[-beta 0 0 0 0],[beta 0 0 0 0]};
 dyn_ann_list{2} = Dyn(A1, F_ann, B1, XU, [], [],[], Ad, Fd_ann, D_ann,...
                     [],[],Ew,XW_v);
                 
@@ -133,7 +133,7 @@ dyn_ann_list{2} = Dyn(A1, F_ann, B1, XU, [], [],[], Ad, Fd_ann, D_ann,...
 
 % Disturbances [w_ex, w_ey, w_Lx, u1, u2, dA]
 Ew = [0 dt 0 0]';
-XW_v = {[0 0 0 0 v_ey(2)],[0 0 0 0 -v_ey(1)]}; % not sure about this part
+XW_v = {[0 0 0 0 v_ey(1)],[0 0 0 0 v_ey(2)]}; % not sure about this part
 dyn_ann_list{3} = Dyn(A1, F_ann, B1, XU, [], [],[], Ad, Fd_ann, D_ann,...
                     [],[],Ew,XW_v);
 
@@ -154,7 +154,7 @@ D_caut = Polyhedron('A', Hd_caut, 'b', hd_caut);
 Ad = {zeros(4),zeros(4),zeros(4),zeros(4),zeros(4)};
 
 Ew = [0 dt 0 0]';
-XW_v = {[0 0 0 0 0],[0 0 0 0 0]}; % not sure about this part
+XW_v = {[0 0 0 0 0]}; 
 dyn_caut_list{1} = Dyn(A2, F_caut, B2, XU, [], [],[], Ad, Fd_caut,...
                         D_caut,[],[],Ew,XW_v);
 
@@ -162,7 +162,8 @@ dyn_caut_list{1} = Dyn(A2, F_caut, B2, XU, [], [],[], Ad, Fd_caut,...
 % For the case v_ex in region 2
 % =============================
 Ew = [0 dt 0 0]';
-XW_v = {[beta 0 0 0 0],[beta 0 0 0 0]}; % not sure about this part
+% two corners of the domain of the disturbance
+XW_v = {[-beta 0 0 0 0],[beta 0 0 0 0]}; 
 dyn_caut_list{2} = Dyn(A2, F_caut, B2, XU, [], [],[], Ad, Fd_caut,...
                         D_caut,[],[],Ew,XW_v);
 
@@ -170,7 +171,8 @@ dyn_caut_list{2} = Dyn(A2, F_caut, B2, XU, [], [],[], Ad, Fd_caut,...
 % For the case v_ex in region 3
 % =============================
 Ew = [0 dt 0 0]';
-XW_v = {[0 0 0 0 v_ey(2)],[0 0 0 0 -v_ey(1)]}; % not sure about this part
+% two corners of the domain of the disturbance
+XW_v = {[0 0 0 0 v_ey(1)],[0 0 0 0 v_ey(2)]}; 
 dyn_caut_list{3} = Dyn(A2, F_caut, B2, XU, [], [],[], Ad, Fd_caut,...
                         D_caut,[],[],Ew,XW_v);
 

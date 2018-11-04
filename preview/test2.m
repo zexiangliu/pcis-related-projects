@@ -13,8 +13,8 @@ param.vmax = 35;
 
 % theta varying in several intervals
 tmin = -10;
-tmax = 12;
-num_seg = 5;
+tmax = 10;
+num_seg = 3;
 param.thetamin = linspace(sind(tmin),sind(tmax-1),num_seg);
 param.thetamax = linspace(sind(tmin+1),sind(tmax),num_seg);
 param.umax = 0.2*param.m*param.g;
@@ -33,25 +33,26 @@ dyn_list = get_cc_dyn(param);
 dyn_all = get_cc_dyn(param2);
 dyn_all = dyn_all{1};
 
-ts = [0 1 0 0 0; 
-      0 0 1 0 0;
-      0 0 0 1 0;
-      0 0 0 0 1;
-      1 0 0 0 0];
+ts = [0 1 0; 
+      1 0 1;
+      0 1 0];
 
-t_prev = [0 2 0 0 0; 
-      0 0 2 0 0;
-      0 0 0 2 0;
-      0 0 0 0 2;
-      2 0 0 0 0];
-t_hold = [3 3 3 3 30;
-          inf inf inf inf 100];
+t_prev = [0 5 0; 
+          5 0 5;
+          0 5 0];
+t_hold = [20   20   20;
+          inf inf inf];
   
 pa = PrevAuto(num_seg,ts,dyn_list,t_prev,t_hold);
 
-X = Polyhedron('A', [1; -1], 'b', [32;-16]);
+% safe sets: uphill, zero, downhill
+X_up = Polyhedron('A', [1; -1], 'b', [32;-18]);
+X_zero = Polyhedron('A', [1; -1], 'b', [32;-16]);
+X_down = Polyhedron('A', [1; -1], 'b', [30;-16]);
 
-X_list = {X,X,X,X,X};
+X = intersect(X_up,X_down);
+
+X_list = {X_down,X_zero,X_up};
 
 pre = @(dyn,X) dyn.pre(X,0);
 vol = @(X) X.volume;

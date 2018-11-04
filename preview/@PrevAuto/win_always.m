@@ -1,4 +1,4 @@
-function [C_inv,volume] = win_always(pa,X,pre,vol,inter,W,verbose)
+function [C_inv,volume] = win_always(pa,X,pre,vol,inter,isEmpty,W,verbose)
 % Compute the invariant set in the preview automaton
 % Inputs: pa  --- preview automaton
 %         X   --- the cell of safe sets of states in the preview automaton
@@ -38,7 +38,7 @@ best_order = directedspantree(pa.ts_array');
 while(1)
     tic;
     for i = best_order
-        if isEmptySet(C_inv{i})
+        if isEmpty(C_inv{i})
             continue;
         end
         
@@ -56,7 +56,7 @@ while(1)
         
         for j = 1:length(C_tmp)
            for k = 1:t_prev(j)
-               C_tmp{j} = intersect(pre(pa.dyn{i},C_tmp{j}),X{i});
+               C_tmp{j} = inter(pre(pa.dyn{i},C_tmp{j}),X{i});
            end
         end
         
