@@ -17,12 +17,13 @@ con = constants_tri;
 n_x = 4; %Dimension of the state space
 n_u = 2; %Dimension of the input space
 
-A = [ -con.f1 0 0 0;
-      0 0 0 0;
-      1 0 0 1;
-      0 0 0 -1];
+A = [ 1-con.f1*con.dt 0 0 0;
+      0 1 0 0;
+      -con.dt 0 1 con.dt;
+      0 0 0 1-con.f1*con.dt];
+  %%% unsure f_l
 
-B = [eye(2); zeros(2)];
+B = [eye(2)*con.dt; zeros(2)];
 
 Bw = B;
 
@@ -30,10 +31,10 @@ Bw = B;
 
 %Region 1, for Annoying Driver
 A_r1 = [ zeros(3,4) ;
-         0 0 0 -1/con.dt ];
-F_r1 = [zeros(3,1); con.vL_max/con.dt];
+         0 0 0 -1 ];
+F_r1 = [zeros(3,1); con.vL_max];
 
-Bw_r1 = [ B zeros(n_x,1) ];
+Bw_r1 = { Bw(:,1), Bw(:,2), zeros(n_x,1) };
 
 %Define Polyhedral domain as Hx * x <= h_x
 Hx_r1 = -(con.K_ann + [ 0 0 0 1 ]); 
@@ -41,9 +42,9 @@ hx_r1 = -(con.vL_max - con.dLmax);
 r1 = Polyhedron('A',Hx_r1,'b',hx_r1);
 
 %Region 2, for Annoying Driver
-A_r2 = [zeros(3,4); con.K_ann ];
+A_r2 = [zeros(3,4); con.K_ann*con.dt ];
 F_r2 = zeros(n_x,1);
-Bw_r2 = [ B [zeros(3,1); 1] ];
+Bw_r2 = { Bw(:,1), Bw(:,2), [zeros(3,1); con.dt] };
 
 Hx_r2 = [   con.K_ann + [ 0 0 0 1 ] ;
             -(con.K_ann + [ 0 0 0 1 ]) ];
@@ -53,10 +54,10 @@ r2 = Polyhedron('A',Hx_r2,'b',hx_r2);
 
 %Region 3, for Annoying Driver
 A_r3 = [ zeros(3,4) ;
-         0 0 0 -1/con.dt ];
-F_r3 = [zeros(3,1); con.vL_min/con.dt];
+         0 0 0 -1 ];
+F_r3 = [zeros(3,1); con.vL_min];
 
-Bw_r3 = [B zeros(n_x,1)];
+Bw_r3 = {Bw(:,1), Bw(:,2), zeros(n_x,1)};
 
 Hx_r3 = con.K_ann + [ 0 0 0 1 ];
 hx_r3 = con.vL_min + con.dLmin;
@@ -66,36 +67,40 @@ r3 = Polyhedron('A',Hx_r3,'b',hx_r3);
 dom = Polyhedron('lb',[con.v_min, con.y_min, -inf, con.vL_min ], ...
                  'ub',[con.v_max, con.y_max, inf, con.vL_max] );
 
-D = Polyhedron('lb',[con.dmin_ACC,con.dmin_LK,con.dLmin],'ub',[con.dmax_ACC,con.dmax_LK,con.dLmax]) %Feasible disturbances
+D = Polyhedron('lb',[con.dmin_ACC,con.dmin_LK,con.dLmin],...
+    'ub',[con.dmax_ACC,con.dmax_LK,con.dLmax]); %Feasible disturbances
 XU = Polyhedron('A',[zeros(n_u,n_x) eye(n_u) ; zeros(n_u,n_x) -eye(n_u) ], ...
                 'b',[con.umax_ACC ; con.umax_LK ; -con.umin_ACC ; -con.umin_LK ]);
 
+Ad = {zeros(n_x),zeros(n_x),zeros(n_x)};
+            
 pwd_A = PwDyn(dom, { r1.intersect(dom) , r2.intersect(dom), r3.intersect(dom) } , ...
-                { Dyn(A+A_r1, F_r1, B, XU , {} , {} , Polyhedron(), {zeros(n_x)}, {Bw_r1} , D ), ...
-                  Dyn(A+A_r2, F_r2, B, XU , {} , {} , Polyhedron(), {zeros(n_x)}, {Bw_r2} , D ), ...
-                  Dyn(A+A_r3, F_r3, B, XU , {} , {} , Polyhedron(), {zeros(n_x)}, {Bw_r3} , D )} );
+                { Dyn(A+A_r1, F_r1, B, XU , {} , {} , Polyhedron(), Ad, Bw_r1 , D ), ...
+                  Dyn(A+A_r2, F_r2, B, XU , {} , {} , Polyhedron(), Ad, Bw_r2 , D ), ...
+                  Dyn(A+A_r3, F_r3, B, XU , {} , {} , Polyhedron(), Ad, Bw_r3 , D )} );
 
              
 clear A_r1 A_r2 A_r3 B_r1 B_r2 B_r3 F_r1 F_r2 F_r3 
 
 %% Matrix Modifications for the Cautious driver.
 
-%Region 1, for Annoying Driver
+%Region 1, for Cautious Driver
 A_r1 = [ zeros(3,4) ;
-         0 0 0 -1/con.dt ];
-F_r1 = [zeros(3,1); con.vL_max/con.dt];
+         0 0 0 -1 ];
+F_r1 = [zeros(3,1); con.vL_max];
 
-Bw_r1 = [ B zeros(n_x,1) ];
+Bw_r1 = { Bw(:,1),Bw(:,2), zeros(n_x,1) };
 
 %Define Polyhedral domain as Hx * x <= h_x
 Hx_r1 = -(con.K_cau + [ 0 0 0 1 ]); 
 hx_r1 = -(con.vL_max - con.dLmax); 
 r1 = Polyhedron('A',Hx_r1,'b',hx_r1);
 
-%Region 2, for Annoying Driver
-A_r2 = [zeros(3,4); con.K_cau ];
-F_r2 = zeros(n_x,1);
-Bw_r2 = [ B [zeros(3,1); 1] ];
+%Region 2, for Cautious Driver
+A_r2 = [zeros(3,4); con.K_cau*con.dt ];
+%%% unsure what is k_C
+F_r2 = [zeros(3,1);-con.K3_cau*con.vL_des*con.dt];
+Bw_r2 = { Bw(:,1), Bw(:,2), [zeros(3,1); con.dt] };
 
 Hx_r2 = [   con.K_cau + [ 0 0 0 1 ] ;
             -(con.K_cau + [ 0 0 0 1 ]) ];
@@ -103,12 +108,12 @@ hx_r2 = [   con.vL_max - con.dLmax ;
             con.vL_min + con.dLmin];
 r2 = Polyhedron('A',Hx_r2,'b',hx_r2);
 
-%Region 3, for Annoying Driver
+%Region 3, for Cautious Driver
 A_r3 = [ zeros(3,4) ;
-         0 0 0 -1/con.dt ];
-F_r3 = [zeros(3,1); con.vL_min/con.dt];
+         0 0 0 -1 ];
+F_r3 = [zeros(3,1); con.vL_min];
 
-Bw_r3 = [B zeros(n_x,1)];
+Bw_r3 = {Bw(:,1), Bw(:,2), zeros(n_x,1)};
 
 Hx_r3 = con.K_cau + [ 0 0 0 1 ];
 hx_r3 = con.vL_min + con.dLmin;
@@ -124,9 +129,9 @@ XU = Polyhedron('A',[zeros(n_u,n_x) eye(n_u) ; zeros(n_u,n_x) -eye(n_u) ], ...
                 'b',[con.umax_ACC ; con.umax_LK ; -con.umin_ACC ; -con.umin_LK ]);
 
 pwd_C = PwDyn(dom, { r1.intersect(dom) , r2.intersect(dom), r3.intersect(dom) } , ...
-                { Dyn(A+A_r1, F_r1, B, XU , {} , {} , Polyhedron(), {zeros(n_x)}, {Bw_r1} , D ), ...
-                  Dyn(A+A_r2, F_r2, B, XU , {} , {} , Polyhedron(), {zeros(n_x)}, {Bw_r2} , D ), ...
-                  Dyn(A+A_r3, F_r3, B, XU , {} , {} , Polyhedron(), {zeros(n_x)}, {Bw_r3} , D )} );
+                { Dyn(A+A_r1, F_r1, B, XU , {} , {} , Polyhedron(), Ad, Bw_r1 , D ), ...
+                  Dyn(A+A_r2, F_r2, B, XU , {} , {} , Polyhedron(), Ad, Bw_r2 , D ), ...
+                  Dyn(A+A_r3, F_r3, B, XU , {} , {} , Polyhedron(), Ad, Bw_r3 , D )} );
 
 
 end

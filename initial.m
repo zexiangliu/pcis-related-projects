@@ -1,5 +1,11 @@
 clc;clear all;close all;
 path(pathdef);
+
+% set up mosek
+addpath(genpath('../../mosek/8/toolbox/'))
+javaaddpath ../../mosek/8/tools/platform/linux64x86/bin/mosekmatlab.jar
+
+
 addpath(genpath('pcis/lib/'))
 % addpath(genpath('cps-inv/library'));
 
