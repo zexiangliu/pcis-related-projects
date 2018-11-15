@@ -23,12 +23,14 @@ function [P12] = IntersectPolyUnion(P1,P2, MaxNum)
             
             if(P12.Num >= MaxNum)
                 P12.reduce; % or P12.merge
+%                 P12.merge;
                 MaxNum = max(MaxNum,P12.Num*2);
             end
         end
     end
     
     P12.reduce;
+%     P12.merge;
 %     % reduce the number of the Polytopes
 %     if(P12.Num >= MaxNum)
 %         P12.reduce; % or P12.merge
