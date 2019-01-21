@@ -21,8 +21,8 @@ clc;
 cd ..
 mpt_init
 
-% addpath(genpath('preview'))
-% cd preview
+addpath(genpath('preview'))
+cd preview
 % addpath(genpath('int_estim'))
 % cd int_estim
 % addpath(genpath('acc_disturb'))

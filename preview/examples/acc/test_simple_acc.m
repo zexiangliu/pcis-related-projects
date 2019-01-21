@@ -1,4 +1,5 @@
 clc;clear all;close all;
+mptopt('lpsolver', 'LCP', 'qpsolver', 'QUADPROG');
 %% Parameters
 param.m = 1650;
 param.f0 = 0.1;
@@ -64,6 +65,5 @@ vol = @(X) X.volume;
 inter = @(X1,X2) minHRep(X1.intersect(X2));
 isEmpty = @(X) isEmptySet(X);
 %%
-[W,volume] = pa.win_always(X_list,pre,vol,inter,isEmpty,[],1);
-
-W2 = dyn_all.win_always(X,0,0,1);
+W2 = dyn_all.win_always(X,0.0,1,1);
+% [W,volume] = pa.win_always(X_list,pre,vol,inter,isEmpty,[],1);
