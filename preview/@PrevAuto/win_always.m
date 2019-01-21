@@ -1,4 +1,5 @@
-function [C_inv,volume] = win_always(pa,X,pre,vol,inter,isEmpty,W,verbose)
+function [C_inv,volume] = win_always2(pa,X,pre,vol,inter,isEmpty,...
+    isContain,W,verbose)
 % Compute the invariant set in the preview automaton
 % Inputs: pa  --- preview automaton
 %         X   --- the cell of safe sets of states in the preview automaton
@@ -26,15 +27,16 @@ end
 num_s = pa.num_s;
 
 % record the history volume
-volume_hist = compute_vol(C_inv,vol);
-volume_hist2 = zeros(length(volume_hist),1);
-volume = volume_hist2;
+volume = compute_vol(C_inv,vol);
 
+% record the history C_inv
+C_hist = X;
+
+bool_hist = zeros(num_s,1,'logical');
 counter = 0;
 
 % heuristic order of iterating the states
 best_order = directedspantree(pa.ts_array');
-
 while(1)
     tic;
     for i = best_order
@@ -49,8 +51,8 @@ while(1)
         th_min = pa.t_hold(1,i);
         t_min = min(t_prev);
         
-        % if all the post states have the same volume, then skip
-        if(all(volume_hist(post)==volume_hist2(post)))
+        % if all the post states have temporary converge, then skip
+        if(all(bool_hist(post)))
             continue;
         end
         
@@ -62,18 +64,17 @@ while(1)
         
         if isinf(th_max)
             C_i = Inv(pa.dyn{i},interUnion(C_tmp,inter),pre,...
-                vol,inter,verbose);
-            vol_old = vol(C_i);
+                vol,inter, isContain,verbose);
+            C_i_old = C_i;
             for j = t_min+1:th_min
                 C_i = inter(pre(pa.dyn{i},C_i),X{i});
                 t_left = t_prev >= j;
                 if(all(~t_left))
-                    C_i = inter(C_i,X{i});
-                    vol_new = vol(C_i);
-                    if(vol_new == vol_old)
+%                     C_i = inter(C_i,X{i});
+                    if isContain(C_i_old,C_i)
                         break;
                     else
-                        vol_old = vol_new;
+                        C_i_old = C_i;
                     end
                 else
                     C_i = inter(C_i,interUnion(C_tmp(t_left)));
@@ -81,17 +82,16 @@ while(1)
             end
         else
             C_i = interUnion(C_tmp(t_prev==t_min),inter);
-            vol_old = vol(C_i);
+            C_i_old = C_i;
             for j = t_min+1:th_max
                 C_i = pre(pa.dyn{i},C_i);
                 t_left = (t_prev<=j) & (th_max-j+t_prev >= th_min);
                 if(all(~t_left))
                     C_i = inter(C_i,X{i});
-                    vol_new = vol(C_i);
-                    if(vol_old == vol_new)
+                    if isContain(C_i_old, C_i)
                         break;
                     else
-                        vol_old = vol_new;
+                        C_i_old = C_i;
                     end
                 else
                     C_i = inter(C_i,interUnion(C_tmp(t_left),inter));
@@ -102,16 +102,16 @@ while(1)
     end
     
     % termination condition
-    volume = compute_vol(C_inv,vol);
-    if(all(volume_hist <= volume))
+    bool_hist = compare_C_inv(C_inv, C_hist, isContain);
+    if(all(bool_hist))
         break;
     else
-        volume_hist2 = volume_hist;
-        volume_hist = volume;
+        C_hist = C_inv;
     end
     
     counter = counter + 1;
-    if verbose
+    if verbose    
+        volume = compute_vol(C_inv,vol);
         str1 = sprintf("the %d th iteration: ",counter);
         str2 = ["volume: "+ num2str(volume','%0.2f ')];
         str3 = [",time "+num2str(toc)+"s"];
@@ -122,6 +122,15 @@ end
 
 end
 
+% compare if all C_inv are contained by C_hist
+function bool_list = compare_C_inv(C_inv, C_hist, isContain)
+    bool_list = zeros(length(C_inv),1,"logical");
+    for i = 1:length(C_inv)
+        if isContain(C_hist{i}, C_inv{i})
+            bool_list(i) = true;
+        end
+    end
+end
 
 function volume = compute_vol(W,vol)
     volume = zeros(length(W),1);
@@ -139,10 +148,10 @@ function C = interUnion(C_Union,inter)
     end
 end
 
-function C_inv = Inv(dyn, X, pre, vol, inter, verbose)
+function C_inv = Inv(dyn, X, pre, vol, inter,isContain, verbose)
     C_inv = X;
     
-    vol_hist = vol(C_inv);
+    C_hist = C_inv;
     
     while(1)
         C_inv = pre(dyn,C_inv);
@@ -151,10 +160,10 @@ function C_inv = Inv(dyn, X, pre, vol, inter, verbose)
         if verbose
             disp("  Within Inv: " + num2str(volume)+".");
         end
-        if(vol_hist <= volume)
+        if(isContain(C_hist,C_inv))
             break;
         else
-            vol_hist = volume;
+            C_hist = C_inv;
         end
     end
 end

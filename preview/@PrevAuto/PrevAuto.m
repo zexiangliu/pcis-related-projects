@@ -92,9 +92,8 @@ classdef PrevAuto
                 pa.t_prev(s1(i),s2(i)) = 0;
             end
         end
-            
-        [C_inv,volume] = win_always(pa,X,pre,vol,inter,isEmpty,W,verbose)
-        [C_inv,volume] = win_always2(pa,X,pre,vol,inter,isEmpty,...
+        
+        [C_inv,volume] = win_always(pa,X,pre,vol,inter,isEmpty,...
             isContain,W,verbose)
     end
     
