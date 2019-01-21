@@ -60,10 +60,16 @@ X = intersect(X_up,X_down);
 
 X_list = {X_down,X_zero,X_up};
 
-pre = @(dyn,X) dyn.pre(X,1e-6);
+rho = 1e-6;
+pre = @(dyn,X) dyn.pre(X,rho);
 vol = @(X) X.volume;
 inter = @(X1,X2) minHRep(X1.intersect(X2));
 isEmpty = @(X) isEmptySet(X);
+
+rho_ball = Polyhedron('A', [eye(dyn_list{1}.nx); -eye(dyn_list{1}.nx)], ...
+                      'b', repmat(rho,4,1));
+isContain = @(C1,C2) C1-rho_ball <= C2;
+
 %%
-W2 = dyn_all.win_always(X,0,1,1);
-% [W,volume] = pa.win_always(X_list,pre,vol,inter,isEmpty,[],1);
+% W2 = dyn_all.win_always(X,0,1,1);
+[W,volume] = pa.win_always2(X_list,pre,vol,inter,isEmpty,isContain,[],1);
