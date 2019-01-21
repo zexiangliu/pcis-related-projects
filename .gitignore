@@ -3,3 +3,5 @@ pcis/
 cps-inv/
 tbxmanager/
 *.mat
+*.fig
+*.eps
