@@ -1,5 +1,5 @@
 clc;clear all;close all;
-mptopt('lpsolver', 'LCP', 'qpsolver', 'QUADPROG');
+mptopt('lpsolver', 'CDD', 'qpsolver', 'GUROBI');
 %% Parameters
 param.m = 1650;
 param.f0 = 0.1;
@@ -12,7 +12,7 @@ param.g = 9.82;
 param.vmin = 0;
 param.vmax = 35;
 
-param.v_l = [16,30];
+param.v_l = [29,30];
 
 % theta varying in several intervals
 tmin = -10;
@@ -71,5 +71,7 @@ rho_ball = Polyhedron('A', [eye(dyn_list{1}.nx); -eye(dyn_list{1}.nx)], ...
 isContain = @(C1,C2) C1-rho_ball <= C2;
 
 %%
-% W2 = dyn_all.win_always(X,0,1,1);
-[W,volume] = pa.win_always2(X_list,pre,vol,inter,isEmpty,isContain,[],1);
+% W2 = dyn_all.win_always_rho(X,0.002,1,1);
+W2 = dyn_all.win_always(X,0.00,1,1);
+
+% [W,volume] = pa.win_always(X_list,pre,vol,inter,isEmpty,isContain,[],1);

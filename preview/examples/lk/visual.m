@@ -4,7 +4,7 @@ if nargin == 2
 end
 PW = W.projection(dim);
 plot(PW)
-xlabel("x");
-ylabel("y");
-zlabel("z");
+xlabel("y");
+ylabel("v");
+zlabel("r");
 end
