@@ -1,4 +1,4 @@
-mptopt('lpsolver', 'CDD', 'qpsolver', 'GUROBI');
+mptopt('lpsolver', 'MOSEK', 'qpsolver', 'MOSEK');
 % safety constraints      
 y_max = 0.9;
 y_min = -0.9;
@@ -21,8 +21,8 @@ Safe = Polyhedron("H",...
 % vehicle parameters
 param.C_af = 133000;
 param.C_ar = 98800;
-param.m = 1650;
-param.u = 26;
+param.m = 1800;
+param.u = 30;
 param.b = 1.59;
 param.Iz = 2315;
 param.a = 1.11;
@@ -50,12 +50,12 @@ ts = [0 1 0 0 0;
       0 0 1 0 1;
       0 0 0 1 0];
 
-t_prev = [0 5 0 0 0; 
-          5 0 5 0 0;
-          0 5 0 5 0;
-          0 0 5 0 5;
-          0 0 0 5 0];
-t_hold = [8 8 26 7 6;
+t_prev = [0 1 0 0 0; 
+          1 0 1 0 0;
+          0 1 0 1 0;
+          0 0 1 0 1;
+          0 0 0 1 0];
+t_hold = [1 1 1 1 1;
           inf inf inf inf inf];
 pa = PrevAuto(num_seg,ts,dyn_list,t_prev,t_hold);
 
@@ -69,7 +69,7 @@ W_all = dyn_all.win_always(Safe,0,0,1);
 % W3 = dyn_list{4}.win_always(Safe,0,0,1);
 %%
 X_list = {Safe,Safe,Safe,Safe,Safe};
-[W,volume] = pa.win_always2(X_list,pre,vol,inter,isEmpty,isContain,[],1);
+[W,volume] = pa.win_always(X_list,pre,vol,inter,isEmpty,isContain,[],1);
 
 %% visualization
 dim = [1 2 4];

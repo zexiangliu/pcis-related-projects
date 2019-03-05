@@ -4,7 +4,8 @@ if nargin == 2
 end
 PW = W.projection(dim);
 plot(PW)
-xlabel("x");
-ylabel("y");
-zlabel("z");
+xlabel("y",'interpreter','latex');
+ylabel("v",'interpreter','latex');
+zlabel("r",'interpreter','latex');
+set(gca,'fontsize',12);
 end
