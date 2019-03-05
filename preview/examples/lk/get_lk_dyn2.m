@@ -1,5 +1,5 @@
-function dyn = get_lk_dyn(param)
-% dynamics of lane keeping for fixed longitudinal speed.
+function dyn = get_lk_dyn2(param)
+% dynamics of lane keeping for longitudinal speed as a disturbance.
 
 % parameters
 C_af = param.C_af;

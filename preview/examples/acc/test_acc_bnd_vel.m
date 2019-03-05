@@ -1,5 +1,5 @@
 clc;clear all;close all;
-mptopt('lpsolver', 'LCP', 'qpsolver', 'QUADPROG');
+mptopt('lpsolver', 'CDD', 'qpsolver', 'GUROBI');
 %% Parameters
 param.m = 1650;
 param.f0 = 0.1;
@@ -12,7 +12,7 @@ param.g = 9.82;
 param.vmin = 0;
 param.vmax = 35;
 
-param.v_l = [16,30];
+param.v_l = [29,30];
 
 % theta varying in several intervals
 tmin = -10;
