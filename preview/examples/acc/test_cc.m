@@ -15,8 +15,8 @@ param.vmax = 35;
 % theta varying in several intervals
 tmin = 0;
 tmax = 20;
-param.thetamin = [sind(-0.5), sind(29.5), sind(-0.5)];
-param.thetamax = [sind(0.5), sind(30.5), sind(0.5)];
+param.thetamin = [sind(-30.5), sind(-0.5), sind(29.5)];
+param.thetamax = [sind(-29.5), sind(0.5), sind(30.5)];
 param.umax = 0.66*param.m*param.g;
 param.umin = -0.65*param.m*param.g;
 
@@ -28,7 +28,7 @@ param2 = param;
 % param2.thetamin = sind(-0.5);
 % param2.thetamax = sind(20.5);
 
-param2.thetamin = sind(-0.5);
+param2.thetamin = sind(-30.5);
 param2.thetamax = sind(30.5);
 
 dyn_list = get_cc_dyn(param);
@@ -38,12 +38,12 @@ dyn_all = dyn_all{1};
 
 ts = [0 1 0 ; 
       1 0 1 ;
-      0 0 0 ;];
+      0 1 0 ;];
 
-t_prev = [0 2 0 ; 
-          2 0 2 ;
-          0 0 0 ];
-t_hold = [3 3 inf;
+t_prev = [0 1 0 ; 
+          1 0 1 ;
+          0 1 0 ];
+t_hold = [2 2 2;
           inf inf inf];
   
 pa = PrevAuto(3,ts,dyn_list,t_prev,t_hold);
@@ -64,4 +64,4 @@ isContain = @(C1,C2) C1-rho_ball <= C2;
 %%
 [W,volume] =pa.win_always(X_list,pre,vol,inter,isEmpty,isContain,[],1);
 
-W2 = dyn_all.win_always(X,rho,1,1);
+W2 = dyn_all.win_always(X,rho,0,1);

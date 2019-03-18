@@ -125,7 +125,7 @@ end
 if verbose    
     disp("the winning set converges.")
     volume = compute_vol(C_inv,vol);
-    str1 = sprintf("the %d th iteration: ",counter);
+    str1 = sprintf("the %d th iteration: ",counter+1);
     str2 = ["volume: "+ num2str(volume','%0.2f ')];
     str3 = [",time "+num2str(toc)+"s"];
     disp(str1+str3);
