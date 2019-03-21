@@ -19,7 +19,7 @@ rd_max = param.rd_max;
 A = [0 1 u 0;
     0 -(C_af+C_ar)/m/u 0 (b*C_ar - a*C_af)/m/u-u;
     0 0 0 1;
-    0 b*C_ar-a*C_af/Iz/u 0 -(a^2*C_af + b^2*C_ar)/Iz/u];
+    0 (b*C_ar-a*C_af)/Iz/u 0 -(a^2*C_af + b^2*C_ar)/Iz/u];
 B = [0; C_af/m; 0; a*C_af/Iz];
 
 K = [0;0;0;0];

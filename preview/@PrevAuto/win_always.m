@@ -152,7 +152,7 @@ function C_inv = Inv(dyn, X, pre, vol, inter,isContain, verbose)
     C_inv = X;
     
     C_hist = C_inv;
-    
+    disp("   Getting into Inv:");
     while(1)
         C_inv = pre(dyn,C_inv);
         C_inv = inter(C_inv,X);
