@@ -1,4 +1,6 @@
-mptopt('lpsolver', 'CDD', 'qpsolver', 'MOSEK');
+% synthesize an inv set for Kwesi's task
+
+mptopt('lpsolver', 'MOSEK', 'qpsolver', 'MOSEK');
 % safety constraints      
 y_max = 0.9;
 y_min = -0.9;

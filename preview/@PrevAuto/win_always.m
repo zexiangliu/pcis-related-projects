@@ -63,6 +63,9 @@ while(1)
         end
         
         if isinf(th_max)
+            if verbose    
+                disp("start cinv of state "+num2str(i));
+            end
             C_i = Inv(pa.dyn{i},interUnion(C_tmp,inter),pre,...
                 vol,inter, isContain,verbose);
             C_i_old = C_i;
@@ -119,7 +122,16 @@ while(1)
         disp(str2);
     end
 end
-
+if verbose    
+    disp("the winning set converges.")
+    volume = compute_vol(C_inv,vol);
+    str1 = sprintf("the %d th iteration: ",counter+1);
+    str2 = ["volume: "+ num2str(volume','%0.2f ')];
+    str3 = [",time "+num2str(toc)+"s"];
+    disp(str1+str3);
+    disp(str2);
+end
+    
 end
 
 % compare if all C_inv are contained by C_hist
@@ -158,7 +170,7 @@ function C_inv = Inv(dyn, X, pre, vol, inter,isContain, verbose)
         C_inv = inter(C_inv,X);
         volume = vol(C_inv);
         if verbose
-            disp("  Within Inv: " + num2str(volume)+".");
+            disp("  within inv: " + num2str(volume)+".");
         end
         if(isContain(C_hist,C_inv))
             break;

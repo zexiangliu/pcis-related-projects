@@ -2,7 +2,6 @@ clc;clear all;close all;
 % Compute an invariant set for a triple integrator system
 mptopt('lpsolver', 'GUROBI', 'qpsolver', 'GUROBI');
 load LinearizeModel.mat
-
 dt = 0.01; 
 
 % System matrices: already discrete-time
@@ -32,18 +31,19 @@ X = Polyhedron('A', [eye(4); -eye(4); C; -C], 'b', [xmax; xmax; ymax; ymax]);
 %  X = Polyhedron('A', [C; -C], 'b', [ymax; ymax]);
 
 XU = Polyhedron('H', [0 0 0 0 1 umax;
-				      0 0 0 0 -1 umax]);
+		      0 0 0 0 -1 umax]);
                   
 P = Polyhedron('lb',-1, 'ub', 1);
-
-profile on;
-d = Dyn(Adt0, -Bdt*umax, zeros(4,1), XU,{Adt1}, {zeros(4,1)}, P);
-Xinv_max = win_always_rho(d, X, 0.001, false, 1);
+% rho_var = @(n) 1e-4;
+% profile on;
+d = Dyn(Adt0, Bdt*umax, zeros(4,1), XU,  {Adt1}, {zeros(4,1)}, P);
+Xinv_max = win_always_rho_var(d, X, @rho_var, false, 1);
 save('Xinv_max.mat','Xinv_max');
-profile viewer;
+% profile viewer;
 
-% d = Dyn(Adt0, -Bdt*umin, [], XU,  {Adt1}, {zeros(4,1)}, P);
-% Xinv_min = win_always(d, X, 0.0001, 1, 1);
-% save('Xinv_min.mat','Xinv_min');
+d = Dyn(Adt0, Bdt*umin, [], XU,  {Adt1}, {zeros(4,1)}, P);
+Xinv_min = win_always_rho_var(d, X, @rho_var, false, 1);
+save('Xinv_min.mat','Xinv_min');
+
 
 

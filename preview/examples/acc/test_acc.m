@@ -60,7 +60,7 @@ X = intersect(X_up,X_down);
 
 X_list = {X_down,X_zero,X_up};
 
-pre = @(dyn,X) dyn.preUnion(X,0);
+pre = @(dyn,X) dyn.pre(X,0);
 vol = @(X) volumePolyUnion(X);
 inter = @(X1,X2) IntersectPolyUnion(X1,X2);
 isEmpty = @(X) isEmptyPolyUnion(X);

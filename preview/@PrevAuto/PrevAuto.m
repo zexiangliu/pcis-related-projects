@@ -1,4 +1,8 @@
-classdef PrevAuto
+classdef PrevAuto < handle
+% class of preview automaton
+
+% modeling tips: if state q is a deadlock, set ts_array(q,q)=1,
+% t_prev(q,q)= 0, t_hold(:,q) =[0;inf].
     properties(SetAccess = private)
         num_s;          % number of states
         ts_array;       % ts(i,j)=1: state i ---> state j
@@ -23,8 +27,24 @@ classdef PrevAuto
                 pa.dyn = dyn;
                 pa.t_prev = t_prev;
                 pa.t_hold = t_hold;
+                deadlock_setup(pa)
             end
             pa.check();
+        end
+        
+        function deadlock_setup(pa)
+            % convert the user deadlock format to the format acceptable by
+            % the code.
+            
+            num = pa.num_s;
+            % rewrite deadlock states
+            for k = 1:num
+                if sum(pa.ts_array(k,:))==0 && isinf(pa.t_hold(1,k))
+                    pa.ts_array(k,k) = 1;
+                    pa.t_prev(k,k) = 0;
+                    pa.t_hold(1,k) = 0;
+                end
+            end
         end
         
         function check(pa)
@@ -44,6 +64,8 @@ classdef PrevAuto
                     idx = pa.t_prev(i,:)~=0;
                     assert(all(pa.t_prev(i,idx)<=pa.t_hold(1,i)));
                 end
+                % no deadlock
+                assert(all(sum(pa.ts_array,2)))
             end
         end
         

@@ -50,12 +50,12 @@ ts = [0 1 0 0 0;
       0 0 1 0 1;
       0 0 0 1 0];
 
-t_prev = [0 1 0 0 0; 
+t_prev = 1*[0 1 0 0 0; 
           1 0 1 0 0;
           0 1 0 1 0;
           0 0 1 0 1;
           0 0 0 1 0];
-t_hold = [1 1 1 1 1;
+t_hold = [[1 1 1 1 1]*10;
           inf inf inf inf inf];
 pa = PrevAuto(num_seg,ts,dyn_list,t_prev,t_hold);
 
@@ -69,7 +69,7 @@ W_all = dyn_all.win_always(Safe,0,0,1);
 % W3 = dyn_list{4}.win_always(Safe,0,0,1);
 %%
 X_list = {Safe,Safe,Safe,Safe,Safe};
-[W,volume] = pa.win_always(X_list,pre,vol,inter,isEmpty,isContain,[],1);
+[W2,volume2] = pa.win_always(X_list,pre,vol,inter,isEmpty,isContain,[],1);
 
 %% visualization
 dim = [1 2 4];
