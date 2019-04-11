@@ -27,9 +27,10 @@ param.u = 30;
 param.b = 1.59;
 param.Iz = 2315;
 param.a = 1.11;
-
 param.steer_max = pi/2; 
 param.steer_min = -pi/2;
+
+param.dt = 0.1;
 
 % the dynamics with large rd range
 param.rd_min = -0.05;
@@ -56,7 +57,7 @@ t_prev = 1*[0 1 0 0 0;
           0 1 0 1 0;
           0 0 1 0 1;
           0 0 0 1 0];
-t_hold = [[1 1 1 1 1];
+t_hold = [[1 1 1 1 1]*1;
           inf inf inf inf inf];
 pa = PrevAuto(num_seg,ts,dyn_list,t_prev,t_hold);
 
@@ -66,16 +67,20 @@ isContain = @(C1,C2) C1 <= C2;
 inter = @(X1,X2) minHRep(X1.intersect(X2));
 isEmpty = @(X) isEmptySet(X);
 %%
-W_all = dyn_all.win_always(Safe,0,0,1);
+% W_all = dyn_all.win_always(Safe,0,0,1);
 % W3 = dyn_list{4}.win_always(Safe,0,0,1);
 %%
 X_list = {Safe,Safe,Safe,Safe,Safe};
-[W,volume] = pa.win_always(X_list,pre,vol,inter,isEmpty,isContain,[],1);
+[W,volume, W_hier, T_min] = pa.win_always(X_list,pre,vol,inter,isEmpty,isContain,[],1);
 
 %% visualization
 dim = [1 2 4];
-% visual(W_all,dim);
-for i = 1:5
-    visual(W{i},dim);
+fig=figure;
+for i = 1:1
+    hold on;
+    visual(W{i},dim,fig,'g');
     view(-90.5,40)
 end
+
+W_new = Polyhedron('A',W_all.A,'b',W_all.b+1e-4);
+visual(W_new,dim,fig,'r');
