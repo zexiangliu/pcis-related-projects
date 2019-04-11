@@ -60,10 +60,10 @@ classdef PrevAuto < handle
                 assert(~any(array_and_prev(:)));
                 assert(all(pa.t_hold(1,:) <= pa.t_hold(2,:)));
                 
-                for i = 1:pa.num_s
-                    idx = pa.t_prev(i,:)~=0;
-                    assert(all(pa.t_prev(i,idx)<=pa.t_hold(1,i)));
-                end
+%                 for i = 1:pa.num_s
+%                     idx = pa.t_prev(i,:)~=0;
+%                     assert(all(pa.t_prev(i,idx)<=pa.t_hold(1,i)));
+%                 end
                 % no deadlock
                 assert(all(sum(pa.ts_array,2)))
             end

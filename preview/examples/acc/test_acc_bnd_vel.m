@@ -71,8 +71,10 @@ rho_ball = Polyhedron('A', [eye(dyn_list{1}.nx); -eye(dyn_list{1}.nx)], ...
 isContain = @(C1,C2) C1-rho_ball <= C2;
 
 %%
-W2 = dyn_all.win_always_rho_inv(X,@rho_var,1,1);
+% profile on;
+% W2 = dyn_all.win_always_rho_var(X,@rho_var,1,1);
+% profile viewer
 % W2 = dyn_all.win_always_rho(X, 0.0006,1,1);
-% W2 = dyn_all.win_always(X,0.0006,1,1);
+W2 = dyn_all.win_always(X,0.01,1,1);
 
 % [W,volume] = pa.win_always(X_list,pre,vol,inter,isEmpty,isContain,[],1);

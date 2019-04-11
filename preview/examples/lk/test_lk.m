@@ -1,3 +1,4 @@
+clc;clear all;
 mptopt('lpsolver', 'MOSEK', 'qpsolver', 'MOSEK');
 % safety constraints      
 y_max = 0.9;
@@ -50,12 +51,12 @@ ts = [0 1 0 0 0;
       0 0 1 0 1;
       0 0 0 1 0];
 
-t_prev = [0 1 0 0 0; 
+t_prev = 1*[0 1 0 0 0; 
           1 0 1 0 0;
           0 1 0 1 0;
           0 0 1 0 1;
           0 0 0 1 0];
-t_hold = [1 1 1 1 1;
+t_hold = [[1 1 1 1 1];
           inf inf inf inf inf];
 pa = PrevAuto(num_seg,ts,dyn_list,t_prev,t_hold);
 
@@ -74,6 +75,7 @@ X_list = {Safe,Safe,Safe,Safe,Safe};
 %% visualization
 dim = [1 2 4];
 % visual(W_all,dim);
-for i = 1:1
+for i = 1:5
     visual(W{i},dim);
+    view(-90.5,40)
 end

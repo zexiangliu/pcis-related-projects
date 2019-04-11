@@ -1,3 +1,4 @@
+clc;clear all;close all;
 mptopt('lpsolver', 'MOSEK', 'qpsolver', 'MOSEK');
 % safety constraints      
 y_max = 0.9;
@@ -74,6 +75,6 @@ X_list = {Safe,Safe,Safe,Safe,Safe};
 %% visualization
 dim = [1 2 4];
 % visual(W_all,dim);
-for i = 1:1
-    visual(W{i},dim);
+for i = 1:5
+    visual(W2{i},dim);
 end
