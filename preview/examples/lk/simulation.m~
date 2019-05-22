@@ -1,0 +1,4 @@
+load lk_inv_1_1.mat
+
+m0 = 1;
+x
