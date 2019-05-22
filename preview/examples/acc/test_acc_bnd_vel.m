@@ -1,5 +1,5 @@
 clc;clear all;close all;
-mptopt('lpsolver', 'GUROBI', 'qpsolver', 'GUROBI');
+mptopt('lpsolver', 'gurobi', 'qpsolver', 'gurobi');
 %% Parameters
 param.m = 1650;
 param.f0 = 0.1;
@@ -75,6 +75,6 @@ isContain = @(C1,C2) C1-rho_ball <= C2;
 % W2 = dyn_all.win_always_rho_var(X,@rho_var,1,1);
 % profile viewer
 % W2 = dyn_all.win_always_rho(X, 0.0006,1,1);
-W2 = dyn_all.win_always(X,0.01,1,1);
+W = dyn_all.win_always_rho_inv(X,@rho_var,1,1);
 
 % [W,volume] = pa.win_always(X_list,pre,vol,inter,isEmpty,isContain,[],1);

@@ -9,6 +9,7 @@ u = param.u;
 b = param.b;
 Iz = param.Iz;
 a = param.a;
+dt = param.dt;
 
 d_f_max = param.steer_max;
 d_f_min = param.steer_min;
@@ -16,15 +17,15 @@ d_f_min = param.steer_min;
 rd_min = param.rd_min;
 rd_max = param.rd_max;
 
-A = [0 1 u 0;
+A = eye(4) + [0 1 u 0;
     0 -(C_af+C_ar)/m/u 0 (b*C_ar - a*C_af)/m/u-u;
     0 0 0 1;
-    0 (b*C_ar-a*C_af)/Iz/u 0 -(a^2*C_af + b^2*C_ar)/Iz/u];
-B = [0; C_af/m; 0; a*C_af/Iz];
+    0 (b*C_ar-a*C_af)/Iz/u 0 -(a^2*C_af + b^2*C_ar)/Iz/u]*dt;
+B = [0; C_af/m; 0; a*C_af/Iz]*dt;
 
 K = [0;0;0;0];
 
-D = [0;0;-1;0];
+D = [0;0;-1;0]*dt;
 
 XU = Polyhedron('H', [0 0 0 0 1 d_f_max;
                       0 0 0 0 -1 -d_f_min]);

@@ -1,7 +1,7 @@
 function rho = rho_var(n)
 
 if n < 10
-    rho = 0.01;%5*1e-4;
+    rho = 1*1e-4;
 else
-    rho = 0.05;
+    rho = 5*1e-4;
 end

@@ -115,7 +115,7 @@ classdef PrevAuto < handle
             end
         end
         
-        [C_inv,volume] = win_always(pa,X,pre,vol,inter,isEmpty,...
+        [C_inv,volume, C_hier, T_min] = win_always(pa,X,pre,vol,inter,isEmpty,...
             isContain,W,verbose)
     end
     

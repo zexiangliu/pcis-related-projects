@@ -38,12 +38,12 @@ P = Polyhedron('lb',-1, 'ub', 1);
 % profile on;
 d = Dyn(Adt0, Bdt*umax, zeros(4,1), XU,  {Adt1}, {zeros(4,1)}, P);
 Xinv_max = win_always_rho_var(d, X, @rho_var, false, 1);
-save('Xinv_max.mat','Xinv_max');
+% save('Xinv_max.mat','Xinv_max');
 % profile viewer;
 
 d = Dyn(Adt0, Bdt*umin, [], XU,  {Adt1}, {zeros(4,1)}, P);
 Xinv_min = win_always_rho_var(d, X, @rho_var, false, 1);
-save('Xinv_min.mat','Xinv_min');
+% save('Xinv_min.mat','Xinv_min');
 
 
 

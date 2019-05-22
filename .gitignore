@@ -2,6 +2,15 @@
 pcis/
 cps-inv/
 tbxmanager/
+indicate_nonredundant_halfplanes/
+ellipsoidal_cinv/
 *.mat
 *.fig
 *.eps
+*.svg
+*.avi
+*.mp4
+*.zip
+*.png
+*.jpg
+*.tif

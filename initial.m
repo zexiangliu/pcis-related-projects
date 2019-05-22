@@ -11,7 +11,8 @@ gurobi_setup
 
 cd '/home/zexiang/PROG/PCIS/pcis_projects'
 
-addpath(genpath('pcis/lib/'))
+addpath(genpath('pcis/lib/'));
+addpath(genpath('indicate_nonredundant_halfplanes'));
 % addpath(genpath('cps-inv/library'));
 
 cd tbxmanager/
@@ -22,7 +23,8 @@ cd ..
 mpt_init
 
 addpath(genpath('preview'))
-cd preview
+% addpath(genpath('indicate_nonredundant_halfplanes'));
+% cd preview
 % addpath(genpath('int_estim'))
 % cd int_estim
 % addpath(genpath('acc_disturb'))
