@@ -33,14 +33,14 @@ param.steer_min = -pi/2;
 param.dt = 0.1;
 
 % the dynamics with large rd range
-param.rd_min = -0.05;
-param.rd_max = 0.05;
+param.rd_min = -0.06;
+param.rd_max = 0.06;
 
 dyn_all = get_lk_dyn(param);
 
 % the dynamics with preview
 num_seg = 5;
-rd = linspace(-0.05,0.0,num_seg+1);
+rd = linspace(-0.06,0.06,num_seg+1);
 
 param.rd_min = rd(1:num_seg);
 param.rd_max = rd(2:num_seg+1);
@@ -52,7 +52,7 @@ ts = [0 1 0 0 0;
       0 0 1 0 1;
       0 0 0 1 0];
 
-t_prev = 5*[0 1 0 0 0; 
+t_prev = 1*[0 1 0 0 0; 
           1 0 1 0 0;
           0 1 0 1 0;
           0 0 1 0 1;
@@ -67,7 +67,7 @@ isContain = @(C1,C2) C1 <= C2;
 inter = @(X1,X2) minHRep(X1.intersect(X2));
 isEmpty = @(X) isEmptySet(X);
 %%
-W_all = dyn_all.win_always(Safe,0,0,1);
+% W_all = dyn_all.win_always(Safe,0,0,1);
 % W3 = dyn_list{4}.win_always(Safe,0,0,1);
 %%
 X_list = {Safe,Safe,Safe,Safe,Safe};
