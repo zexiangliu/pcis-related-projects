@@ -52,12 +52,12 @@ ts = [0 1 0 0 0;
       0 0 1 0 1;
       0 0 0 1 0];
 
-t_prev = 1*[0 1 0 0 0; 
+t_prev = 5*[0 1 0 0 0; 
           1 0 1 0 0;
           0 1 0 1 0;
           0 0 1 0 1;
           0 0 0 1 0];
-t_hold = [[1 1 1 1 1]*1;
+t_hold = [[1 1 1 1 1]*5;
           inf inf inf inf inf];
 pa = PrevAuto(num_seg,ts,dyn_list,t_prev,t_hold);
 

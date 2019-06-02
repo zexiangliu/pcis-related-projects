@@ -26,9 +26,10 @@
 % visual(W_new,dim,fig,'r',1);
 
 clc;clear all;
-load lk_inv_new_rd_1.mat
-W1 = W;
 load lk_inv_new_rd_5.mat
+load lk_inv_new_rd_T1_H5.mat
+W1 = W;
+load lk_inv_new_rd_T5_H5.mat
 W2 = W;
 
 dim = [1 2 4];
@@ -55,9 +56,8 @@ hold on;
 W_new = Polyhedron('A',W2{1}.A,'b',W2{1}.b+0*1e-4);
 visual(W_new,dim,fig2,'g',1);
 
-W_new = Polyhedron('A',W1{1}.A,'b',W1{1}.b+0.2*1e-4);
+W_new = Polyhedron('A',W1{1}.A,'b',W1{1}.b+0*1e-4);
 visual(W_new,dim,fig2,'b',1);
-
 
 W_new = Polyhedron('A',W_all.A,'b',W_all.b+0.4*1e-4);
 visual(W_new,dim,fig2,'r',1);
