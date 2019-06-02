@@ -36,10 +36,10 @@ dim = [1 2 4];
 fig=figure;
 hold on;
 
-W_new = Polyhedron('A',W2{1}.A,'b',W2{1}.b+0*1e-4);
+W_new = Polyhedron('A',W2{5}.A,'b',W2{5}.b+0*1e-4);
 visual(W_new,dim,fig,'g',1);
 
-W_new = Polyhedron('A',W1{1}.A,'b',W1{1}.b+0.2*1e-4);
+W_new = Polyhedron('A',W1{5}.A,'b',W1{5}.b+0.2*1e-4);
 visual(W_new,dim,fig,'b',1);
 
 
