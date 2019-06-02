@@ -99,7 +99,11 @@ while(1)
             
             % save C_hier
             if is_C_hier
-                C_hier{i}{1}{t_min} = C_i;
+                if t_min ~= 0                
+                    C_hier{i}{1}{t_min} = C_i;
+                else
+                    C_hier{i}{1}{1} = C_i;
+                end
             end
             
             for j = t_min+1:th_min
