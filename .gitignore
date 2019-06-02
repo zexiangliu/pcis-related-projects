@@ -2,6 +2,7 @@
 pcis/
 cps-inv/
 tbxmanager/
+output/
 *.mat
 *.fig
 *.eps

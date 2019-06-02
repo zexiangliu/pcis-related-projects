@@ -2,12 +2,13 @@ function best_order = directedspantree(M_adj)
 % generate iteration order by finding 
 % the largest sub-tree in a directed graph.
     n = length(M_adj);
+    M_adj = double(M_adj);
     forest = cell(n,1);
     num_node = zeros(n,1);
     num_layer = zeros(n,1);
     for i = 1:n
         forest{i} = {};
-        I = zeros(n,1,'logical');
+        I = zeros(n,1);
         I(i) = 1;
         I_old = I;
         forest{i} = i;

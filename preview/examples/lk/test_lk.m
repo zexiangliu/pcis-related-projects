@@ -1,5 +1,5 @@
 clc;clear all;
-mptopt('lpsolver', 'MOSEK', 'qpsolver', 'MOSEK');
+%mptopt('lpsolver', 'MOSEK', 'qpsolver', 'MOSEK');
 % safety constraints      
 y_max = 0.9;
 y_min = -0.9;
@@ -67,13 +67,14 @@ isContain = @(C1,C2) C1 <= C2;
 inter = @(X1,X2) minHRep(X1.intersect(X2));
 isEmpty = @(X) isEmptySet(X);
 %%
-% W_all = dyn_all.win_always(Safe,0,0,1);
-% W3 = dyn_list{4}.win_always(Safe,0,0,1);
+%W_all = dyn_all.win_always(Safe,0,0,1);
+%W3 = dyn_list{4}.win_always(Safe,0,0,1);
 %%
 X_list = {Safe,Safe,Safe,Safe,Safe};
 [W,volume, W_hier, T_min] = pa.win_always(X_list,pre,vol,inter,isEmpty,isContain,[],1);
 
 %% visualization
+%{
 dim = [1 2 4];
 fig=figure;
 for i = 1:1
@@ -84,3 +85,4 @@ end
 
 W_new = Polyhedron('A',W_all.A,'b',W_all.b+1e-4);
 visual(W_new,dim,fig,'r');
+%}
