@@ -4,7 +4,7 @@ if nargin == 2
     color = 'r';
     alpha = 1;
 end
-PW = W.projection(dim);
+PW = projection2(W,dim);
 plot(PW,'alpha',alpha,'color',color)
 xlabel("$y$",'interpreter','latex');
 ylabel("$v$",'interpreter','latex');
