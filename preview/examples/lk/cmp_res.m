@@ -27,43 +27,48 @@
 
 clc;clear all;
 load lk_inv_new_rd_5.mat
-load lk_inv_new_rd_T1_H5.mat
+% load lk_inv_new_rd_T1_H5.mat
 % load res_T1_H2.mat
+% load lk_inv_T1_H1.mat
+load res_T1_H2.mat
 W1 = W;
 clear W;
-load lk_inv_new_rd_T5_H5.mat
+% load lk_inv_new_rd_T5_H5.mat
 % load res_T2_H2.mat
+% load lk_inv_T5_H1.mat
+load lk_inv_new_rd_T1_H5.mat
 W2 = W;
 %%
+axisnames = ["y","v","\Delta\Psi","r"];
 idx = 4;
 dim = [1 2 4];
 fig=figure;
 hold on;
 
 W_new = Polyhedron('A',W2{idx}.A,'b',W2{idx}.b+0*1e-4);
-visual(W_new,dim,fig,'g',1);
+visual(W_new,dim,fig,'g',1,axisnames);
 
-W_new = Polyhedron('A',W1{idx}.A,'b',W1{idx}.b+0*1e-4);
-visual(W_new,dim,fig,'b',1);
+W_new = Polyhedron('A',W1{idx}.A,'b',W1{idx}.b+0.1*1e-4);
+visual(W_new,dim,fig,'b',1,axisnames);
 
 W_new = Polyhedron('A',W_all.A,'b',W_all.b+0.2*1e-4);
-visual(W_new,dim,fig,'r',1);
+visual(W_new,dim,fig,'r',1,axisnames);
 set(gca,'fontsize',15);
 view(165.5,10)
 
 
-dim = [2 3 4];
+dim = [1 2 3];
 fig2=figure;
 hold on;
 
 W_new = Polyhedron('A',W2{idx}.A,'b',W2{idx}.b+0*1e-4);
-visual(W_new,dim,fig2,'g',1);
+visual(W_new,dim,fig2,'g',1,axisnames);
 
-W_new = Polyhedron('A',W1{idx}.A,'b',W1{idx}.b+0*1e-4);
-visual(W_new,dim,fig2,'b',1);
+W_new = Polyhedron('A',W1{idx}.A,'b',W1{idx}.b+0.1*1e-4);
+visual(W_new,dim,fig2,'b',1,axisnames);
 
 W_new = Polyhedron('A',W_all.A,'b',W_all.b+0.2*1e-4);
-visual(W_new,dim,fig2,'r',1);
+visual(W_new,dim,fig2,'r',1,axisnames);
 set(gca,'fontsize',15);
 view(-45.5,10)
 
