@@ -1,0 +1,16 @@
+dt = 0.1;
+f1= 3/36;
+v_min = 16;
+v_max = 36;
+vL1_min = 25;
+vL1_max = 25;
+vL2_min = 25;
+vL2_max = 25;
+u_min = -3;
+u_max = 3;
+vy_max = 1.8;
+vy_min = -1.8;
+y_min = -0.9;
+y_max = 2.7;
+y_mid = 0.9;
+h_min = 10;
